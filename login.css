@@ -7,7 +7,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: url('../image/syifa.jpg') no-repeat center center/cover;
+  background: url('syifa.jpg') no-repeat center center/cover;
   min-height: 100vh;
 }
 
