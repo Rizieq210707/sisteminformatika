@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - SMK Hangtuah 1 Jakarta</title>
+  <link rel="stylesheet" href="../css/login.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+</head>
+<body>
+  <header class="header">
+    <img src="../image/yth.png" alt="Logo Sekolah" class="logo">
+    <div class="title">
+      <h1>SMK HANGTUAH 1 JAKARTA</h1>
+      <h2>SMK PUSAT KEUNGGULAN</h2>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="login-card">
+      <div class="image-box">
+        <img src="../image/tg.jpg" alt="Foto Sekolah">
+      </div>
+      <div class="form-box">
+        <h2>LOGIN</h2>
+        <form id="loginForm">
+          <input type="text" id="username" placeholder="Username" required>
+          <input type="password" id="password" placeholder="Password" required>
+          <select id="role" required>
+            <option value="" disabled selected>Role</option>
+            <option value="admin">Admin</option>
+            <option value="guru">Guru</option>
+            <option value="siswa">Siswa</option>
+          </select>
+          <button type="submit">Masuk</button>
+        </form>
+        <p id="status"></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function main() {
+      let pyodide = await loadPyodide();
+
+      const loginForm = document.getElementById("loginForm");
+      const status = document.getElementById("status");
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const role = document.getElementById("role").value;
+
+        const code = `
+users = [
+  {"username": "admin", "password": "admin123", "role": "admin"},
+  {"username": "guru", "password": "guru123", "role": "guru"},
+  {"username": "siswa", "password": "siswa123", "role": "siswa"}
+]
+
+def check_login(username, password, role):
+    for user in users:
+        if user["username"] == username and user["password"] == password and user["role"] == role:
+            return True
+    return False
+
+check_login("${username}", "${password}", "${role}")
+`;
+
+        const result = await pyodide.runPythonAsync(code);
+
+        if (result === true) {
+          window.location.href = "index.html";
+           window.location.href = "guru.html";
+            window.location.href = "index.html";
+        } else {
+          status.textContent = "Login gagal. Periksa kembali!";
+          status.style.color = "red";
+        }
+      });
+    }
+
+    main();
+  </script>
+</body>
+</html>
